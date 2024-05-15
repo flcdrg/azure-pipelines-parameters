@@ -6,6 +6,16 @@ parameters:
     type: object
     default:
       - Build
+  - name: Complex2
+    type: object
+    default:
+      - Build
+      - Second
+  - name: Complex3
+    type: object
+    default:
+      - Second
+      - Third
 
 trigger:
 - main
@@ -26,6 +36,26 @@ jobs:
   displayName: 'Second job'
   dependsOn:
     ${{ parameters.Complex }}
+
+  steps:
+  - script: echo $(Simple)
+    displayName: 'Run a one-line script'
+
+- job: Third
+  displayName: 'Third job'
+  dependsOn:
+    ${{ parameters.Complex2 }}
+
+  steps:
+  - script: echo $(Simple)
+    displayName: 'Run a one-line script'
+
+- job: Fourth
+  displayName: 'Fourth job'
+  dependsOn:
+    - Build
+    - ${{ each item in parameters.Complex3 }}
+        - ${{ item }}
 
   steps:
   - script: echo $(Simple)
