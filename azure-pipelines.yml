@@ -54,7 +54,7 @@ jobs:
   displayName: 'Fourth job'
   dependsOn:
     - Build
-    - ${{ each item in parameters.Complex3 }}
+    - ${{ each item in parameters.Complex3 }}:
         - ${{ item }}
 
   steps:
