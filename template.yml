@@ -1,0 +1,9 @@
+parameters:
+  - name: Complex
+    type: object
+
+steps:
+  - script: echo $content
+    displayName: "Run a one-line script"
+    env:
+      content: ${{ convertToJson(parameters.Complex) }}
