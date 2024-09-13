@@ -42,7 +42,7 @@ jobs:
     displayName: 'Run a one-line script'
 
 - job: Third
-  displayName: 'Third job'
+  displayName: 'Third job ${{ parameters.Complex2[1]}}'
   dependsOn:
     ${{ parameters.Complex2 }}
 
