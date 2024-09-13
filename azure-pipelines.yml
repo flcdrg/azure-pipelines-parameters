@@ -1,7 +1,7 @@
 parameters:
   - name: Simple
     type: string
-    default: 'Hello World'
+    default: "Hello World"
   - name: Complex
     type: object
     default:
@@ -9,8 +9,10 @@ parameters:
   - name: Complex2
     type: object
     default:
-      - Build
-      - Second
+      - name: Build
+        extra: thing
+      - name: Second
+        extra: thing2
   - name: Complex3
     type: object
     default:
@@ -18,45 +20,55 @@ parameters:
       - Third
 
 trigger:
-- main
+  - main
 
 pool:
   vmImage: ubuntu-latest
 
 jobs:
-- job: Build
-  displayName: 'Build job'
-  steps:
-  - script: echo $(Simple)
-    displayName: 'Run a one-line script'
-    env:
-      Simple: ${{ parameters.Simple }}
+  - job: Build
+    displayName: "Build job"
+    steps:
+      - checkout: none
+      - script: echo $(Simple)
+        displayName: "Run a one-line script"
+        env:
+          Simple: ${{ parameters.Simple }}
 
-- job: Second
-  displayName: 'Second job'
-  dependsOn:
-    ${{ parameters.Complex }}
+  - job: Second
+    displayName: "Second job"
+    dependsOn: ${{ parameters.Complex }}
 
-  steps:
-  - script: echo $(Simple)
-    displayName: 'Run a one-line script'
+    steps:
+      - checkout: none
+      - script: echo $(Simple)
+        displayName: "Run a one-line script"
 
-- job: Third
-  displayName: 'Third job ${{ parameters.Complex2[1]}}'
-  dependsOn:
-    ${{ parameters.Complex2 }}
+  - job: Third
+    displayName: "Third job ${{ parameters.Complex2[1].name }}"
 
-  steps:
-  - script: echo $(Simple)
-    displayName: 'Run a one-line script'
+    steps:
+      - checkout: none
+      - script: echo $(Simple)
+        displayName: "Run a one-line script"
 
-- job: Fourth
-  displayName: 'Fourth job'
-  dependsOn:
-    - Build
-    - ${{ each item in parameters.Complex3 }}:
-        - ${{ item }}
+  - job: Fourth
+    displayName: "Fourth job"
+    dependsOn:
+      - Build
+      - ${{ each item in parameters.Complex3 }}:
+          - ${{ item }}
 
-  steps:
-  - script: echo $(Simple)
-    displayName: 'Run a one-line script'
+    steps:
+      - checkout: none
+      - script: echo $(Simple)
+        displayName: "Run a one-line script"
+
+  - job: Fifth
+    displayName: "Fifth job"
+
+    steps:
+      - checkout: none
+      - template: template.yml
+        parameters:
+          Complex: ${{ parameters.Complex2[0] }}
