@@ -1,7 +1,7 @@
 parameters:
   - name: Simple
     type: string
-    default: 'Hello World'
+    default: "Hello World"
   - name: Complex
     type: object
     default:
@@ -18,45 +18,57 @@ parameters:
       - Third
 
 trigger:
-- main
+  - main
 
 pool:
   vmImage: ubuntu-latest
 
-jobs:
-- job: Build
-  displayName: 'Build job'
-  steps:
-  - script: echo $(Simple)
-    displayName: 'Run a one-line script'
-    env:
-      Simple: ${{ parameters.Simple }}
+stages:
+  - stage: Stage1
+    jobs:
+      - job: Build
+        displayName: "Build job"
+        steps:
+          - script: |
+              echo $(Simple)
+              echo "##vso[task.setvariable variable=SimpleSimon;isOutput=true]Pie man"
+            displayName: "Run a one-line script"
+            name: Step1
+            env:
+              Simple: ${{ parameters.Simple }}
 
-- job: Second
-  displayName: 'Second job'
-  dependsOn:
-    ${{ parameters.Complex }}
+      - job: Second
+        displayName: "Second job"
+        dependsOn: ${{ parameters.Complex }}
 
-  steps:
-  - script: echo $(Simple)
-    displayName: 'Run a one-line script'
+        steps:
+          - script: echo $(Simple)
+            displayName: "Run a one-line script"
 
-- job: Third
-  displayName: 'Third job'
-  dependsOn:
-    ${{ parameters.Complex2 }}
+      - job: Third
+        displayName: "Third job"
+        dependsOn: ${{ parameters.Complex2 }}
 
-  steps:
-  - script: echo $(Simple)
-    displayName: 'Run a one-line script'
+        steps:
+          - script: echo $(Simple)
+            displayName: "Run a one-line script"
 
-- job: Fourth
-  displayName: 'Fourth job'
-  dependsOn:
-    - Build
-    - ${{ each item in parameters.Complex3 }}:
-        - ${{ item }}
+      - job: Fourth
+        displayName: "Fourth job"
+        dependsOn:
+          - Build
+          - ${{ each item in parameters.Complex3 }}:
+              - ${{ item }}
 
-  steps:
-  - script: echo $(Simple)
-    displayName: 'Run a one-line script'
+        steps:
+          - script: echo $(Simple)
+            displayName: "Run a one-line script"
+
+  - stage: Stage2
+    dependsOn: Stage1
+    variables:
+      Simple: $[ stageDependencies.Stage1.Build.outputs['Build.Step1.SimpleSimon'] ]
+    jobs:
+      - template: template.yml
+        parameters:
+          Simple: $(Simple) # This won't work!

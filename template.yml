@@ -1,0 +1,18 @@
+parameters:
+  - name: Simple
+    type: string
+    default: "Hello World"
+
+jobs:
+  - job: TemplateJob
+    displayName: "Build job"
+    steps:
+      - script: env -0 | sort -z | tr '\0' '\n'
+        displayName: printenv
+        env:
+          Simple: ${{ parameters.Simple }}
+
+      - script: echo $Simple
+        displayName: "Run a one-line script"
+        env:
+          Simple: ${{ parameters.Simple }}
