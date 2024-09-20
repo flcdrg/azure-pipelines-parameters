@@ -67,7 +67,7 @@ stages:
   - stage: Stage2
     dependsOn: Stage1
     variables:
-      SimpleSimon: $[ stageDependencies.Stage1.Build.outputs['Build.Step1.SimpleSimon'] ]
+      SimpleSimon: $[ stageDependencies.Stage1.Build.outputs['Step1.SimpleSimon'] ]
       stageDependencies: $[ convertToJson(stageDependencies) ]
 
     jobs:
