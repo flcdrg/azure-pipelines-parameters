@@ -10,9 +10,9 @@ jobs:
       - script: env -0 | sort -z | tr '\0' '\n'
         displayName: printenv
         env:
-          Simple: ${{ parameters.Simple }}
+          Simple2: ${{ parameters.Simple }}
 
-      - script: echo $Simple
+      - script: echo $Simple2
         displayName: "Run a one-line script"
         env:
-          Simple: ${{ parameters.Simple }}
+          Simple2: ${{ parameters.Simple }}

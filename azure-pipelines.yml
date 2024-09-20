@@ -67,8 +67,8 @@ stages:
   - stage: Stage2
     dependsOn: Stage1
     variables:
-      Simple: $[ stageDependencies.Stage1.Build.outputs['Build.Step1.SimpleSimon'] ]
+      SimpleSimon: $[ stageDependencies.Stage1.Build.outputs['Build.Step1.SimpleSimon'] ]
     jobs:
       - template: template.yml
         parameters:
-          Simple: $(Simple) # This won't work!
+          Simple: $(SimpleSimon) # This won't work, as runtime variable hasn't been set yet when template is evaluated
