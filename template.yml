@@ -2,10 +2,13 @@ parameters:
   - name: Simple
     type: string
     default: "Hello World"
+  - name: DependsOn
+    type: string
 
 jobs:
   - job: TemplateJob
     displayName: "Build job"
+    dependsOn: ${{ parameters.DependsOn }}
     steps:
       - script: env -0 | sort -z | tr '\0' '\n'
         displayName: printenv

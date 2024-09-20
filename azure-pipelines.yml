@@ -32,6 +32,7 @@ stages:
           - script: |
               echo $Simple
               echo "##vso[task.setvariable variable=SimpleSimon;isOutput=true]Pie man"
+              echo "##vso[task.setvariable variable=DependsOn;isOutput=true]Stage2Job1"
             displayName: "Run a one-line script"
             name: Step1
             env:
@@ -69,8 +70,16 @@ stages:
     variables:
       SimpleSimon: $[ stageDependencies.Stage1.Build.outputs['Step1.SimpleSimon'] ]
       stageDependencies: $[ convertToJson(stageDependencies) ]
+      Dependencies: $[ stageDependencies.Stage1.Build.outputs['Step1.DependsOn'] ]
 
     jobs:
+      - job: Stage2Job1
+        displayName: "Stage 2 Job 1"
+        steps:
+          - script: echo $(SimpleSimon)
+            displayName: "Run a one-line script"
+
       - template: template.yml
         parameters:
-          Simple: $(SimpleSimon) # This won't work, as runtime variable hasn't been set yet when template is evaluated
+          Simple: $(SimpleSimon)
+          DependsOn: $(Dependencies) # Can we use this to define the dependencies for the job?
