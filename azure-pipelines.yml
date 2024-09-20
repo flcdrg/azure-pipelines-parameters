@@ -68,6 +68,8 @@ stages:
     dependsOn: Stage1
     variables:
       SimpleSimon: $[ stageDependencies.Stage1.Build.outputs['Build.Step1.SimpleSimon'] ]
+      stageDependencies: $[ convertToJson(stageDependencies) ]
+
     jobs:
       - template: template.yml
         parameters:
