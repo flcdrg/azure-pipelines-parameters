@@ -81,5 +81,5 @@ stages:
 
       - template: template.yml
         parameters:
-          Simple: $(SimpleSimon)
-          DependsOn: $(Dependencies) # Can we use this to define the dependencies for the job?
+          Simple: $(SimpleSimon) # This works, as the expression is passed through and then evaluated at runtime
+          # DependsOn: $(Dependencies) # This won't work, as it will fail with 'Stage Stage2 job TemplateJob depends on unknown job $(Dependencies).'
