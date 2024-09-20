@@ -30,7 +30,7 @@ stages:
         displayName: "Build job"
         steps:
           - script: |
-              echo $(Simple)
+              echo $Simple
               echo "##vso[task.setvariable variable=SimpleSimon;isOutput=true]Pie man"
             displayName: "Run a one-line script"
             name: Step1
