@@ -11,11 +11,25 @@ parameters:
     default:
       - Build
       - Second
+      - Fourth
   - name: Complex3
     type: object
     default:
       - Second
       - Third
+  - name: Complex4
+    type: object
+    default:
+      - name: First
+        displayName: "First job"
+        children:
+          - child1
+          - child2
+      - name: Second
+        displayName: "Second job"
+        children:
+          - child3
+          - child4
 
 trigger:
   - main
@@ -64,6 +78,14 @@ stages:
         steps:
           - script: echo $(Simple)
             displayName: "Run a one-line script"
+
+          - ${{ each item in parameters.Complex4 }}:
+              - script: |
+                  echo "Name: ${{ item.name }}" 
+                  echo "Kids: $kids"
+                displayName: ${{ item.displayName }}
+                env:
+                  kids: ${{ convertToJson(item.children) }}
 
   - stage: Stage2
     dependsOn: Stage1
