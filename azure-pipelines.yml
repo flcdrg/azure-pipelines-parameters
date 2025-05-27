@@ -11,7 +11,6 @@ parameters:
     default:
       - Build
       - Second
-      - Fourth
   - name: Complex3
     type: object
     default:
